@@ -193,10 +193,20 @@ const App = () => {
         </div>
       </div>
 
-      {/* Projects Section - Overlapping */}
-      <div className="projects-section">
+      {/* Projects Section - Overlapping with 2 second delay */}
+      <motion.div
+        className="projects-section"
+        initial={{ opacity: 0, y: 100 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 2 }}
+      >
         {/* Scrolling logos - Endless Loop */}
-        <div className="logos-section">
+        <motion.div
+          className="logos-section"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 2.5 }}
+        >
           <motion.div
             className="logo-row"
             animate={{ x: [0, -1200] }}
@@ -215,30 +225,34 @@ const App = () => {
               />
             ))}
           </motion.div>
-        </div>
+        </motion.div>
 
         {/* Projects Title with 3D effect */}
         <motion.div
           className="projects-title-container"
           initial={{ opacity: 0, z: -100 }}
-          whileInView={{ opacity: 1, z: 0 }}
-          transition={{ duration: 1, type: "spring" }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, z: 0 }}
+          transition={{ duration: 1, type: "spring", delay: 3 }}
         >
           <motion.h2
             className="projects-title-3d"
             initial={{ rotateX: -90, opacity: 0 }}
-            whileInView={{ rotateX: 0, opacity: 1 }}
-            transition={{ duration: 1.2, delay: 0.3 }}
-            viewport={{ once: true }}
+            animate={{ rotateX: 0, opacity: 1 }}
+            transition={{ duration: 1.2, delay: 3.3 }}
           >
             PROJECTS
           </motion.h2>
         </motion.div>
 
         {/* Horizontal Scroll Projects Section */}
-        <ScrollLinkedProjects />
-      </div>
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 4 }}
+        >
+          <ScrollLinkedProjects />
+        </motion.div>
+      </motion.div>
     </div>
   )
 }

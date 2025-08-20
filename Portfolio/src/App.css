@@ -16,6 +16,7 @@ body {
 .app {
   min-height: 100vh;
   position: relative;
+  overflow-x: hidden;
 }
 
 /* Main Layout Container */
@@ -308,12 +309,12 @@ body {
   z-index: 10;
   margin-top: -3vh;
   background: linear-gradient(to bottom, #336659, #000000);
-  padding: 2rem 0 1rem;
+  padding: 2rem 0 3rem;
   transform: perspective(1000px) rotateX(3deg);
   transform-origin: top;
   box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.5);
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow: visible;
 }
 
 /* 3D Projects Title */
@@ -494,10 +495,63 @@ body {
 }
 
 /* Responsive Design */
+
+/* Laptop devices (1024px to 1440px) - Better responsive design */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .layout-container {
+    max-width: 1200px;
+    padding: 1.5rem;
+    min-height: 75vh;
+    gap: 2.5rem;
+  }
+
+  .name-left {
+    font-size: 3.5rem;
+  }
+
+  .about-text {
+    font-size: 1rem;
+    max-width: 350px;
+  }
+
+  .tech-stack-card {
+    max-width: 450px;
+  }
+
+  .tech-stack-title {
+    font-size: 1.8rem;
+  }
+
+  .projects-section {
+    height: auto;
+    min-height: 90vh;
+    padding: 3rem 0 4rem;
+    margin-top: -2vh;
+    transform: perspective(900px) rotateX(2deg);
+  }
+
+  .projects-title-3d {
+    font-size: 3.5rem;
+  }
+
+  .project-scroll-card {
+    flex: 0 0 300px;
+    min-height: 300px;
+  }
+
+  .scroll-projects-container {
+    max-width: 800px;
+    padding: 3rem 2rem;
+  }
+}
+
+/* Standard laptop/desktop (1024px and below) */
 @media (max-width: 1024px) {
   .layout-container {
     grid-template-columns: 1fr;
     gap: 2rem;
+    min-height: 70vh;
+    padding: 2rem 1.5rem;
   }
 
   .name-left {
@@ -510,15 +564,28 @@ body {
 
   .projects-section {
     transform: perspective(800px) rotateX(2deg);
-    margin-top: -6vh;
-    padding: 3rem 0 2rem;
+    margin-top: -4vh;
+    padding: 3rem 0 3rem;
+    height: auto;
+    min-height: 85vh;
+  }
+
+  .projects-title-3d {
+    font-size: 3.2rem;
+  }
+
+  .scroll-projects-container {
+    max-width: 700px;
+    padding: 2.5rem 2rem;
   }
 }
 
+/* Tablet and smaller laptops */
 @media (max-width: 768px) {
   .layout-container {
     padding: 1rem;
     grid-template-columns: 1fr;
+    min-height: 65vh;
   }
 
   .name-left {
@@ -571,6 +638,7 @@ body {
 
   .projects-scroll-container {
     max-width: 560px;
+    padding: 2rem;
   }
 
   .logo-item {
@@ -580,12 +648,19 @@ body {
 
   .projects-section {
     transform: perspective(600px) rotateX(1deg);
-    margin-top: -4vh;
-    padding: 2rem 0 1.5rem;
+    margin-top: -3vh;
+    padding: 2rem 0 2.5rem;
+    min-height: 80vh;
   }
 }
 
+/* Mobile devices */
 @media (max-width: 480px) {
+  .layout-container {
+    min-height: 60vh;
+    padding: 1rem;
+  }
+
   .name-left {
     font-size: 2rem;
   }
@@ -641,6 +716,7 @@ body {
 
   .projects-scroll-container {
     max-width: 520px;
+    padding: 1.5rem;
   }
 
   .scroll-projects-container {
@@ -649,7 +725,8 @@ body {
 
   .projects-section {
     transform: perspective(400px) rotateX(0.5deg);
-    margin-top: -3vh;
-    padding: 1.5rem 0 1rem;
+    margin-top: -2vh;
+    padding: 1.5rem 0 2rem;
+    min-height: 75vh;
   }
 }
