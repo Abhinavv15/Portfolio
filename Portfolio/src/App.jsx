@@ -275,11 +275,11 @@ const ScrollLinkedProjects = () => {
     },
     {
       id: 2,
-      title: "Handy Pic",
+      title: "HandScape",
       description: "Collection's of images of your Hand's can be stored here",
       tech: ["React", "Node.js", "MongoDB"],
       github: "https://github.com/kalviumcommunity/S66_hand_pic",
-      live: "https://frontend-deploy.handypic.pages.dev/",
+      live: "https://handscape-o.netlify.app/",
       color: "rgba(45, 45, 45, 0.3)"
     },
     {
