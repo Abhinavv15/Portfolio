@@ -336,81 +336,32 @@ body {
   letter-spacing: -0.01em;
 }
 
-/* Horizontal Scroll Projects */
-.scroll-projects-container {
-  position: relative;
-  max-width: 700px;
+/* Projects Grid Layout */
+.projects-grid-wrapper {
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.progress-indicator {
-  position: absolute;
-  top: -65px;
-  left: -15px;
-  transform: rotate(-90deg);
-  z-index: 10;
-}
-
-.progress-bg {
-  stroke: #2D2D2D;
-  stroke-dashoffset: 0;
-  stroke-width: 10%;
-  fill: none;
-}
-
-.progress-indicator-circle {
-  stroke: #ffffff;
-  stroke-dashoffset: 0;
-  stroke-width: 10%;
-  fill: none;
-}
-
-.projects-scroll-container {
-  display: flex;
-  list-style: none;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  padding: 20px 0;
-  gap: 20px;
-  scroll-behavior: smooth;
   width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  position: relative;
 }
 
-
-
-.projects-scroll-container::-webkit-scrollbar {
-  height: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.5rem;
+  width: 100%;
 }
 
-.projects-scroll-container::-webkit-scrollbar-thumb {
-  background: rgba(51, 102, 89, 0.8);
-  border-radius: 10px;
-  transition: background 0.3s ease;
-}
-
-.projects-scroll-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(51, 102, 89, 1);
-}
-
-.project-scroll-card {
-  flex: 0 0 280px;
+.project-grid-card {
   border-radius: 15px;
-  padding: 2rem;
+  padding: 2.5rem 2rem;
   color: white;
   position: relative;
   overflow: hidden;
   min-height: 280px;
   display: flex;
   flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .project-content {
@@ -729,4 +680,63 @@ body {
     padding: 1.5rem 0 2rem;
     min-height: 75vh;
   }
+}
+
+/* Company Section Enhancements */
+.company-info {
+  margin-top: -1rem;
+  margin-bottom: 2rem;
+  background: rgba(45, 45, 45, 0.4);
+  padding: 0.8rem 1.5rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: inline-block;
+}
+
+.company-text {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.company-link {
+  color: #a8ecd8;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.company-link:hover {
+  color: #fff;
+  border-bottom: 1px solid #fff;
+  text-shadow: 0 0 10px rgba(168, 236, 216, 0.8);
+}
+
+/* Global Animation Enhancements */
+.grid-card {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.grid-card:hover {
+  box-shadow: 0 15px 35px rgba(51, 102, 89, 0.2);
+}
+
+.project-grid-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.project-grid-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(51, 102, 89, 0.3);
+}
+
+.project-link.live-link {
+  background: rgba(51, 102, 89, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.project-link.live-link:hover {
+  background: rgba(51, 102, 89, 1);
+  box-shadow: 0 0 15px rgba(51, 102, 89, 0.5);
 }

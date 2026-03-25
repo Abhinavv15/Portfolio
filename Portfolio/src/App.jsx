@@ -98,6 +98,15 @@ const App = () => {
               I look forward to leveraging my knowledge in real-world applications
               and contributing to innovative projects.
             </p>
+            <motion.div 
+               className="company-info"
+               whileHover={{ scale: 1.05 }}
+               transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              <p className="about-text company-text">
+                Currently working at <a href="https://gencoft.com/" target="_blank" rel="noopener noreferrer" className="company-link">GenCoft Technologies</a>
+              </p>
+            </motion.div>
 
             {/* Connect Section */}
             <div className="connect-section">
@@ -176,13 +185,7 @@ const App = () => {
                 </div>
               </div>
 
-              <div className="tech-section">
-                <h3 className="tech-category">Currently Learning:</h3>
-                <div className="tech-items">
-                  <span className="tech-item learning">Rust</span>
-                  <span className="tech-item learning">FastAPI</span>
-                </div>
-              </div>
+
             </div>
 
             {/* Time Section */}
@@ -240,7 +243,7 @@ const App = () => {
             animate={{ rotateX: 0, opacity: 1 }}
             transition={{ duration: 1.2, delay: 3.3 }}
           >
-            PROJECTS
+            PROJECTS AND WORKS
           </motion.h2>
         </motion.div>
 
@@ -250,19 +253,15 @@ const App = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 4 }}
         >
-          <ScrollLinkedProjects />
+          <ProjectsGrid />
         </motion.div>
       </motion.div>
     </div>
   )
 }
 
-// Scroll-linked horizontal projects component
-const ScrollLinkedProjects = () => {
-  const ref = useRef(null)
-  const { scrollXProgress } = useScroll({ container: ref })
-  const maskImage = useScrollOverflowMask(scrollXProgress)
-
+// Grid projects component
+const ProjectsGrid = () => {
   const projects = [
     {
       id: 1,
@@ -284,106 +283,108 @@ const ScrollLinkedProjects = () => {
     },
     {
       id: 3,
-      title: "Notes App",
-      description: "Work in progress",
-      tech: [],
-      github: "https://github.com/your-username/project3",
-      live: "https://project3-demo.com",
+      title: "QuizWizard Redesign",
+      description: "Redesign of quizwizard website UI/UX",
+      tech: ["Figma", "UI/UX Design"],
+      live: "https://www.figma.com/proto/bIxVZz1Ri5T2SGyFLx0AyM/QuizWizard-Redesign?page-id=0%3A1&node-id=1-2&viewport=409%2C330%2C0.31&t=sBbFYbkKqfz5XfdH-1&scaling=scale-down&content-scaling=fixed",
+      color: "rgba(45, 45, 45, 0.3)"
+    },
+    {
+      id: 4,
+      title: "World Sports Academy",
+      description: "Website built for World Sports Academy",
+      tech: ["React", "Web Design", "Tailwind"],
+      live: "https://wsateam.com/",
+      color: "rgba(45, 45, 45, 0.3)"
+    },
+    {
+      id: 5,
+      title: "Latin Expressions",
+      description: "Redesign of Latin Expressions website",
+      tech: ["React", "Frontend", "Vite"],
+      live: "https://radiant-cocada-cc82ca.netlify.app/",
       color: "rgba(45, 45, 45, 0.3)"
     }
   ]
 
-  return (
-    <div className="scroll-projects-container">
-      <svg className="progress-indicator" width="80" height="80" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="30" pathLength="1" className="progress-bg" />
-        <motion.circle
-          cx="50"
-          cy="50"
-          r="30"
-          className="progress-indicator-circle"
-          style={{ pathLength: scrollXProgress }}
-        />
-      </svg>
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15
+      }
+    }
+  };
 
-      <motion.div ref={ref} className="projects-scroll-container" style={{ maskImage }}>
+  const itemVariants = {
+    hidden: { opacity: 0, y: 50, scale: 0.9 },
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: { type: "spring", stiffness: 100, damping: 15 } 
+    }
+  };
+
+  return (
+    <div className="projects-grid-wrapper">
+      <motion.div 
+        className="projects-grid"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-100px" }}
+      >
         {projects.map((project) => (
-          <div key={project.id} className="project-scroll-card" style={{ background: project.color }}>
-            <div className="project-content">
-              <h3>{project.title}</h3>
-              <p>{project.description}</p>
-              <div className="project-tech-tags">
-                {project.tech.map((tech, index) => (
-                  <span key={index} className="tech-tag">{tech}</span>
-                ))}
-              </div>
-              <div className="project-links">
-                <motion.a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="project-link github-link"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <img src={githubLogo} alt="GitHub" className="link-icon" />
-                  GitHub
-                </motion.a>
-                <motion.a
-                  href={project.live}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="project-link live-link"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  🔗 Live Demo
-                </motion.a>
-              </div>
-            </div>
-          </div>
+          <motion.div 
+            key={project.id} 
+            className="project-grid-card" 
+            variants={itemVariants}
+            style={{ background: project.color }}
+            whileHover={{ y: -10, boxShadow: "0 15px 35px rgba(51, 102, 89, 0.4)" }}
+          >
+             <div className="project-content">
+               <h3>{project.title}</h3>
+               <p>{project.description}</p>
+               <div className="project-tech-tags">
+                 {project.tech.map((tech, index) => (
+                   <span key={index} className="tech-tag">{tech}</span>
+                 ))}
+               </div>
+               <div className="project-links">
+                 {project.github && (
+                   <motion.a
+                     href={project.github}
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     className="project-link github-link"
+                     whileHover={{ scale: 1.05 }}
+                     whileTap={{ scale: 0.95 }}
+                   >
+                     <img src={githubLogo} alt="GitHub" className="link-icon" />
+                     GitHub
+                   </motion.a>
+                 )}
+                 {project.live && (
+                   <motion.a
+                     href={project.live}
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     className="project-link live-link"
+                     whileHover={{ scale: 1.05, background: "rgba(255, 255, 255, 0.4)" }}
+                     whileTap={{ scale: 0.95 }}
+                   >
+                     🔗 Live Demo
+                   </motion.a>
+                 )}
+               </div>
+             </div>
+          </motion.div>
         ))}
       </motion.div>
     </div>
   )
-}
-
-// Scroll overflow mask hook
-const left = `0%`
-const right = `100%`
-const leftInset = `20%`
-const rightInset = `80%`
-const transparent = `#0000`
-const opaque = `#000`
-
-function useScrollOverflowMask(scrollXProgress) {
-  const maskImage = useMotionValue(
-    `linear-gradient(90deg, ${opaque}, ${opaque} ${left}, ${opaque} ${rightInset}, ${transparent})`
-  )
-
-  useMotionValueEvent(scrollXProgress, "change", (value) => {
-    if (value === 0) {
-      animate(
-        maskImage,
-        `linear-gradient(90deg, ${opaque}, ${opaque} ${left}, ${opaque} ${rightInset}, ${transparent})`
-      )
-    } else if (value === 1) {
-      animate(
-        maskImage,
-        `linear-gradient(90deg, ${transparent}, ${opaque} ${leftInset}, ${opaque} ${right}, ${opaque})`
-      )
-    } else if (
-      scrollXProgress.getPrevious() === 0 ||
-      scrollXProgress.getPrevious() === 1
-    ) {
-      animate(
-        maskImage,
-        `linear-gradient(90deg, ${transparent}, ${opaque} ${leftInset}, ${opaque} ${rightInset}, ${transparent})`
-      )
-    }
-  })
-
-  return maskImage
 }
 
 export default App
