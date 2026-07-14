@@ -1,390 +1,504 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { motion, useScroll, useMotionValue, useMotionValueEvent, animate } from 'framer-motion'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import './App.css'
 
-// Import selected logo assets (removed figma, linkedin, canva, vscode)
+// ── Asset imports ───────────────────────────────────────────
 import leetcodeLogo from './assets/LeetCode_logo_rvs.png'
-import netlifyLogo from './assets/Netlify_Logo_0.svg'
-import nodeLogo from './assets/Node.js_logo.png'
-import pythonLogo from './assets/Python-logo.png'
-import renderLogo from './assets/Render logomark - Black.svg'
-import githubLogo from './assets/github-mark.svg'
-import cppLogo from './assets/icons8-c++.svg'
-import cssLogo from './assets/icons8-css3.svg'
-import htmlLogo from './assets/icons8-html5.svg'
-import jsLogo from './assets/icons8-javascript.svg'
+import netlifyLogo  from './assets/Netlify_Logo_0.svg'
+import nodeLogo     from './assets/Node.js_logo.png'
+import pythonLogo   from './assets/Python-logo.png'
+import renderLogo   from './assets/Render logomark - Black.svg'
+import githubLogo   from './assets/github-mark.svg'
+import cppLogo      from './assets/icons8-c++.svg'
+import cssLogo      from './assets/icons8-css3.svg'
+import htmlLogo     from './assets/icons8-html5.svg'
+import jsLogo       from './assets/icons8-javascript.svg'
 import linkedinIcon from './assets/linkedin icon.png'
-import gmailIcon from './assets/icons8-gmail.svg'
-import mysqlLogo from './assets/logo-mysql-170x115.png'
-import mongoLogo from './assets/mongodb logo.svg'
-import postmanLogo from './assets/postman-logo-icon.svg'
-import reactLogo from './assets/react logo.svg'
+import gmailIcon    from './assets/icons8-gmail.svg'
+import mysqlLogo    from './assets/logo-mysql-170x115.png'
+import mongoLogo    from './assets/mongodb logo.svg'
+import postmanLogo  from './assets/postman-logo-icon.svg'
+import reactLogo    from './assets/react logo.svg'
 import tailwindLogo from './assets/tailwindcss-mark.d52e9897.svg'
-import vercelLogo from './assets/vercel-icon-light.svg'
-import viteLogo from './assets/vitejs logo.svg'
+import vercelLogo   from './assets/vercel-icon-light.svg'
+import viteLogo     from './assets/vitejs logo.svg'
+import figmaLogo    from './assets/figma logo.png'
+import canvaLogo    from './assets/canva logo.svg'
 
+// ── Animation variants ──────────────────────────────────────
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } }
+}
+const slideLeft = {
+  hidden: { opacity: 0, x: -50 },
+  show:   { opacity: 1, x: 0,  transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } }
+}
+const slideRight = {
+  hidden: { opacity: 0, x: 50 },
+  show:   { opacity: 1, x: 0,  transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } }
+}
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.09 } } }
 
+// ── Static data ─────────────────────────────────────────────
+const logos = [
+  { src: reactLogo,    alt: 'React'      },
+  { src: nodeLogo,     alt: 'Node.js'    },
+  { src: jsLogo,       alt: 'JavaScript' },
+  { src: htmlLogo,     alt: 'HTML5'      },
+  { src: cssLogo,      alt: 'CSS3'       },
+  { src: tailwindLogo, alt: 'Tailwind'   },
+  { src: mongoLogo,    alt: 'MongoDB'    },
+  { src: mysqlLogo,    alt: 'MySQL'      },
+  { src: postmanLogo,  alt: 'Postman'    },
+  { src: pythonLogo,   alt: 'Python'     },
+  { src: cppLogo,      alt: 'C++'        },
+  { src: viteLogo,     alt: 'Vite'       },
+  { src: netlifyLogo,  alt: 'Netlify'    },
+  { src: vercelLogo,   alt: 'Vercel'     },
+  { src: renderLogo,   alt: 'Render'     },
+  { src: figmaLogo,    alt: 'Figma'      },
+  { src: canvaLogo,    alt: 'Canva'      },
+  { src: githubLogo,   alt: 'GitHub'     },
+  { src: leetcodeLogo, alt: 'LeetCode'   },
+]
 
-// Simple Clock Component
-const SimpleClock = () => {
-  const [time, setTime] = useState(new Date())
+const skillData = [
+  { cat: 'Frontend',       tags: ['JavaScript', 'React', 'Next.js', 'Vite', 'Tailwind CSS', 'HTML5', 'CSS3'] },
+  { cat: 'Backend',        tags: ['Node.js', 'Express.js', 'JWT Auth', 'REST API'] },
+  { cat: 'Database',       tags: ['MongoDB', 'MySQL', 'PostgreSQL'] },
+  { cat: 'Cloud & Deploy', tags: ['AWS', 'GCP', 'Render', 'Netlify', 'Vercel'] },
+  { cat: 'Languages',      tags: ['Python', 'C++', 'Java'] },
+  { cat: 'Tools & Design', tags: ['Git & GitHub', 'Postman', 'Figma', 'Canva', 'Meta Business Suite'] },
+]
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTime(new Date())
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [])
+const socialLinks = [
+  { href: 'https://www.linkedin.com/in/abhinav-v-9496b72b5/', img: linkedinIcon, label: 'LinkedIn' },
+  { href: 'https://github.com/Abhinavv15',                     img: githubLogo,   label: 'GitHub' },
+  { href: 'https://leetcode.com/u/Abhinavv15/',               img: leetcodeLogo, label: 'LeetCode' },
+]
+
+const contactLinks = [
+  { href: 'mailto:Abhinavv0215@gmail.com',                     img: gmailIcon,    label: 'Abhinavv0215@gmail.com' },
+  { href: 'tel:+916282946966',                                 img: null,         label: '+91 6282946966' },
+]
+
+const experiences = [
+  {
+    id: '01',
+    period: 'Sep 2025 – Present',
+    role: 'Software Development Engineer',
+    company: 'GenCoft Technologies',
+    items: ['WorldSportsAcademy — Frontend', 'QuizWizard — UI redesign', 'OffShift — App testing', 'Bracketoro — Website testing', 'Brand Flyers — Design & Frontend'],
+  },
+  {
+    id: '02',
+    period: 'Aug 2024 – Sep 2025',
+    role: 'CSE Program',
+    company: 'Kalvium',
+    items: ['MERN stack via real-world projects', 'Full-stack apps with React & Node.js', 'Collaborative team learning'],
+  },
+]
+
+const projects = [
+  { title: 'Taktikal',             description: 'A full-stack platform for Sports Coaches — managing schedules, athletes, and analytics.',  tech: ['React', 'Node.js', 'MongoDB'], github: 'https://github.com/kalviumcommunity/S66_Abhinav_Capstone_Taktikal', live: 'https://taktikal.netlify.app/' },
+  { title: 'HandScape',            description: 'A gallery where users store and share hand images with full CRUD functionality.',            tech: ['React', 'Node.js', 'MongoDB'], github: 'https://github.com/kalviumcommunity/S66_hand_pic', live: 'https://handscape-o.netlify.app/' },
+  { title: 'QuizWizard Redesign',  description: 'Full UI/UX redesign of the QuizWizard platform, prototyped in Figma.',                     tech: ['Figma', 'UI/UX'],              live: 'https://www.figma.com/proto/bIxVZz1Ri5T2SGyFLx0AyM/QuizWizard-Redesign?page-id=0%3A1&node-id=1-2&viewport=409%2C330%2C0.31&t=sBbFYbkKqfz5XfdH-1&scaling=scale-down&content-scaling=fixed' },
+  { title: 'World Sports Academy', description: 'Official website for World Sports Academy — responsive, modern frontend.',                  tech: ['React', 'Tailwind', 'Vite'],   live: 'https://wsateam.com/' },
+  { title: 'Latin Expressions',    description: 'Redesign and rebuild of the Latin Expressions website with a fresh modern look.',           tech: ['React', 'Vite', 'Frontend'],   live: 'https://latinexpression.netlify.app/' },
+  { title: 'One Katha at a Time',  description: 'A premium storytelling & payment platform. Developed the React frontend, Python backend, and Vite build system.', tech: ['React', 'Python', 'Vite'], live: 'https://one-katha.vercel.app/' },
+  { title: 'GenCoft Redesign',     description: 'Official website redesign for GenCoft Technologies featuring a sleek modern layout and optimized components.', tech: ['React', 'UI/UX', 'Vite'], live: 'https://gencoft.com/' },
+]
+
+// ── Nav ─────────────────────────────────────────────────────
+const Nav = () => {
+  const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <div className="clock-display">
-      <div className="digital-time">
-        {time.toLocaleTimeString('en-US', {
-          hour12: true,
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        })}
-      </div>
-      <div className="date">
-        {time.toLocaleDateString('en-US', {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        })}
-      </div>
-    </div>
+    <>
+      <motion.nav
+        className="nav"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          borderBottom: '1px solid rgba(240, 240, 240, 0.8)',
+          backdropFilter: 'blur(14px)',
+          WebkitBackdropFilter: 'blur(14px)',
+          background: 'rgba(255, 255, 255, 0.82)',
+        }}
+      >
+        <a href="#" className="nav-logo" onClick={() => setMenuOpen(false)}>Abhinav V</a>
+        
+        {/* Desktop links */}
+        <ul className="nav-links">
+          {['Experience', 'Projects'].map(link => (
+            <li key={link}><a href={`#${link.toLowerCase()}`}>{link}</a></li>
+          ))}
+        </ul>
+
+        {/* Hamburger Menu Icon */}
+        <button 
+          className={`nav-hamburger ${menuOpen ? 'active' : ''}`}
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle Navigation Menu"
+        >
+          <span className="hamburger-box">
+            <span className="hamburger-line line-1" />
+            <span className="hamburger-line line-2" />
+            <span className="hamburger-line line-3" />
+          </span>
+        </button>
+      </motion.nav>
+
+      {/* Mobile Drawer Overlay */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            className="mobile-nav-overlay"
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <ul className="mobile-nav-links">
+              {['Experience', 'Projects'].map(link => (
+                <li key={link}>
+                  <a 
+                    href={`#${link.toLowerCase()}`}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {link}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   )
 }
 
-const App = () => {
+// ── Marquee ─────────────────────────────────────────────────
+const Marquee = () => (
+  <div className="marquee-section">
+    <motion.div
+      className="marquee-track"
+      animate={{ x: [0, -1700] }}
+      transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+    >
+      {[...logos, ...logos, ...logos].map((logo, i) => (
+        <React.Fragment key={i}>
+          <div className="marquee-item">
+            <img src={logo.src} alt={logo.alt} />
+          </div>
+          <div className="marquee-sep" />
+        </React.Fragment>
+      ))}
+    </motion.div>
+  </div>
+)
 
-  // Logo arrays for two rows (removed figma, linkedin, canva, vscode)
-  const logos = [
-    leetcodeLogo, netlifyLogo, nodeLogo, pythonLogo, renderLogo,
-    githubLogo, cppLogo, cssLogo, htmlLogo, jsLogo,
-    mysqlLogo, mongoLogo, postmanLogo, reactLogo, tailwindLogo, vercelLogo,
-    viteLogo
-  ]
-
-
+// ── Hero ─────────────────────────────────────────────────────
+const Hero = () => {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
+  const y       = useTransform(scrollYProgress, [0, 1], ['0%', '20%'])
 
   return (
-    <div className="app">
-      {/* Main Layout Container */}
-      <div className="layout-container">
-        {/* Left side - Name */}
-        <motion.div
-          className="name-section"
-          initial={{ opacity: 0, x: -100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1 }}
-        >
+    <section className="hero" ref={ref} id="hero">
+      <motion.div className="hero-inner" style={{ y }}>
+
+        {/* Left: eyebrow + name + bio + connect */}
+        <div className="hero-left">
           <motion.div
-            className="name-container"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 260,
-              damping: 20,
-              delay: 0.5
-            }}
+            className="hero-eyebrow"
+            initial={{ opacity: 0, x: -14 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.15 }}
           >
-            <h1 className="name-left">ABHINAV V</h1>
-            <p className="about-text">
-              I’m passionate about developing software solutions and continuously enhancing my skills. 
-              I look forward to leveraging my knowledge in real-world applications
-              and contributing to innovative projects.
-            </p>
-            <motion.div 
-               className="company-info"
-               whileHover={{ scale: 1.05 }}
-               transition={{ type: "spring", stiffness: 400, damping: 10 }}
-            >
-              <p className="about-text company-text">
-                Currently working at <a href="https://gencoft.com/" target="_blank" rel="noopener noreferrer" className="company-link">GenCoft Technologies</a>
-              </p>
-            </motion.div>
-
-            {/* Connect Section */}
-            <div className="connect-section">
-              <div className="connect-title">CONNECT</div>
-              <div className="connect-icons">
-                <motion.a
-                  href="https://www.linkedin.com/in/abhinav-v-9496b72b5/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="connect-icon"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <img src={linkedinIcon} alt="LinkedIn" />
-                </motion.a>
-                <motion.a
-                  href="mailto:Abhinavdhanesh15@gmail.com"
-                  className="connect-icon"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <img src={gmailIcon} alt="Gmail" />
-                </motion.a>
-                <motion.a
-                  href="https://github.com/Abhinavv15"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="connect-icon"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <img src={githubLogo} alt="GitHub" />
-                </motion.a>
-              </div>
-            </div>
+            Software Developer
           </motion.div>
-        </motion.div>
 
-        {/* Right side - Tech Stack Card */}
-        <div className="cards-grid">
-          {/* Tech Stack Card */}
-          <motion.div
-            className="grid-card tech-stack-card"
+          <motion.h1
+            className="hero-headline"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 1, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="tech-stack-content">
-              <h2 className="tech-stack-title">TECH STACK</h2>
+            Abhinav <em>V</em>
+          </motion.h1>
 
-              <div className="tech-section">
-                <h3 className="tech-category">Frontend:</h3>
-                <div className="tech-items">
-                  <span className="tech-item">React</span>
-                  <span className="tech-item">NextJS</span>
-                  <span className="tech-item">Tailwindcss</span>
-                </div>
-              </div>
+          <motion.p
+            className="hero-bio"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
+            Frontend developer &amp; UI/UX enthusiast with experience in{' '}
+            <strong>React, MERN stack &amp; AI automation</strong>. I build responsive,
+            user-focused web applications — blending engineering precision with design intuition.
+          </motion.p>
 
-              <div className="tech-section">
-                <h3 className="tech-category">Backend:</h3>
-                <div className="tech-items">
-                  <span className="tech-item">NodeJS</span>
-                  <span className="tech-item">ExpressJS</span>
-                  <span className="tech-item">NPM</span>
-                </div>
-              </div>
-
-              <div className="tech-section">
-                <h3 className="tech-category">DB & Services:</h3>
-                <div className="tech-items">
-                  <span className="tech-item">Postman</span>
-                  <span className="tech-item">MongoDB</span>
-                  <span className="tech-item">MySQL</span>
-                </div>
-              </div>
-
-
+          {/* Connect links — horizontal rows */}
+          <motion.div
+            className="connect-block"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.9 }}
+          >
+            <span className="connect-label">Connect</span>
+            <div className="connect-row">
+              {socialLinks.map(({ href, img, label }) => (
+                <motion.a
+                  key={label}
+                  href={href}
+                  className="connect-btn"
+                  target={href.startsWith('http') ? '_blank' : undefined}
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                >
+                  {img && <img src={img} alt={label} />}
+                  {label}
+                </motion.a>
+              ))}
             </div>
-
-            {/* Time Section */}
-            <div className="time-section">
-              <SimpleClock />
+            <div className="connect-row" style={{ marginTop: '0.45rem' }}>
+              {contactLinks.map(({ href, img, label }) => (
+                <motion.a
+                  key={label}
+                  href={href}
+                  className="connect-btn"
+                  target={href.startsWith('http') ? '_blank' : undefined}
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                >
+                  {img && <img src={img} alt={label} />}
+                  {label}
+                </motion.a>
+              ))}
             </div>
           </motion.div>
         </div>
-      </div>
 
-      {/* Projects Section - Overlapping with 2 second delay */}
-      <motion.div
-        className="projects-section"
-        initial={{ opacity: 0, y: 100 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 2 }}
-      >
-        {/* Scrolling logos - Endless Loop */}
+        {/* Right: Technical Skills */}
         <motion.div
-          className="logos-section"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 2.5 }}
+          className="hero-right"
+          initial={{ opacity: 0, x: 24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.9, delay: 0.45 }}
         >
-          <motion.div
-            className="logo-row"
-            animate={{ x: [0, -1200] }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          >
-            {[...logos, ...logos].map((logo, index) => (
-              <img
-                key={index}
-                src={logo}
-                alt={`Logo ${index}`}
-                className="logo-item"
-              />
+          <div className="hero-skills-title">Technical <em>Skills</em></div>
+          <div className="skills-grid">
+            {skillData.map(({ cat, tags }) => (
+              <div key={cat}>
+                <div className="skill-cat-name">{cat}</div>
+                <div className="skill-tags">
+                  {tags.map(tag => (
+                    <motion.span
+                      key={tag}
+                      className="skill-tag"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {tag}
+                    </motion.span>
+                  ))}
+                </div>
+              </div>
             ))}
-          </motion.div>
-        </motion.div>
-
-        {/* Projects Title with 3D effect */}
-        <motion.div
-          className="projects-title-container"
-          initial={{ opacity: 0, z: -100 }}
-          animate={{ opacity: 1, z: 0 }}
-          transition={{ duration: 1, type: "spring", delay: 3 }}
-        >
-          <motion.h2
-            className="projects-title-3d"
-            initial={{ rotateX: -90, opacity: 0 }}
-            animate={{ rotateX: 0, opacity: 1 }}
-            transition={{ duration: 1.2, delay: 3.3 }}
-          >
-            PROJECTS AND WORKS
-          </motion.h2>
-        </motion.div>
-
-        {/* Horizontal Scroll Projects Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 4 }}
-        >
-          <ProjectsGrid />
+          </div>
         </motion.div>
       </motion.div>
-    </div>
+
+      {/* Marquee at the bottom of the hero */}
+      <Marquee />
+    </section>
   )
 }
 
-// Grid projects component
-const ProjectsGrid = () => {
-  const projects = [
-    {
-      id: 1,
-      title: "Taktikal",
-      description: "A website specifically for Sports Coaches",
-      tech: ["React", "Node.js", "MongoDB"],
-      github: "https://github.com/kalviumcommunity/S66_Abhinav_Capstone_Taktikal",
-      live: "https://taktikal.netlify.app/",
-      color: "rgba(45, 45, 45, 0.3)"
-    },
-    {
-      id: 2,
-      title: "HandScape",
-      description: "Collection's of images of your Hand's can be stored here",
-      tech: ["React", "Node.js", "MongoDB"],
-      github: "https://github.com/kalviumcommunity/S66_hand_pic",
-      live: "https://handscape-o.netlify.app/",
-      color: "rgba(45, 45, 45, 0.3)"
-    },
-    {
-      id: 3,
-      title: "QuizWizard Redesign",
-      description: "Redesign of quizwizard website UI/UX",
-      tech: ["Figma", "UI/UX Design"],
-      live: "https://www.figma.com/proto/bIxVZz1Ri5T2SGyFLx0AyM/QuizWizard-Redesign?page-id=0%3A1&node-id=1-2&viewport=409%2C330%2C0.31&t=sBbFYbkKqfz5XfdH-1&scaling=scale-down&content-scaling=fixed",
-      color: "rgba(45, 45, 45, 0.3)"
-    },
-    {
-      id: 4,
-      title: "World Sports Academy",
-      description: "Website built for World Sports Academy",
-      tech: ["React", "Web Design", "Tailwind"],
-      live: "https://wsateam.com/",
-      color: "rgba(45, 45, 45, 0.3)"
-    },
-    {
-      id: 5,
-      title: "Latin Expressions",
-      description: "Redesign of Latin Expressions website",
-      tech: ["React", "Frontend", "Vite"],
-      live: "https://radiant-cocada-cc82ca.netlify.app/",
-      color: "rgba(45, 45, 45, 0.3)"
-    }
-  ]
+// ── Project card with 3-D tilt ────────────────────────────────
+const ProjectCard = ({ project, index }) => {
+  const cardRef = useRef(null)
+  const [rot, setRot] = useState({ x: 0, y: 0 })
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 50, scale: 0.9 },
-    show: { 
-      opacity: 1, 
-      y: 0, 
-      scale: 1,
-      transition: { type: "spring", stiffness: 100, damping: 15 } 
-    }
-  };
+  const handleMove = e => {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const dx = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2)
+    const dy = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2)
+    setRot({ x: -dy * 5, y: dx * 5 })
+  }
 
   return (
-    <div className="projects-grid-wrapper">
-      <motion.div 
-        className="projects-grid"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-100px" }}
-      >
-        {projects.map((project) => (
-          <motion.div 
-            key={project.id} 
-            className="project-grid-card" 
-            variants={itemVariants}
-            style={{ background: project.color }}
-            whileHover={{ y: -10, boxShadow: "0 15px 35px rgba(51, 102, 89, 0.4)" }}
+    <motion.div
+      ref={cardRef}
+      className="project-card"
+      onMouseMove={handleMove}
+      onMouseLeave={() => setRot({ x: 0, y: 0 })}
+      animate={{ rotateX: rot.x, rotateY: rot.y }}
+      transition={{ type: 'spring', stiffness: 200, damping: 22 }}
+      style={{ transformStyle: 'preserve-3d', perspective: 800 }}
+    >
+      <div>
+        <div className="project-num">{String(index + 1).padStart(2, '0')}</div>
+        <div className="project-title">{project.title}</div>
+        <p className="project-desc">{project.description}</p>
+      </div>
+      <div className="project-footer">
+        <div className="project-tags">
+          {project.tech.map(t => <span key={t} className="project-tag">{t}</span>)}
+        </div>
+        <div className="project-links-row">
+          {project.github && (
+            <motion.a href={project.github} target="_blank" rel="noopener noreferrer"
+              className="proj-link" whileHover={{ scale: 1.1 }} title="GitHub">
+              <img src={githubLogo} alt="GitHub" />
+            </motion.a>
+          )}
+          {project.live && (
+            <motion.a href={project.live} target="_blank" rel="noopener noreferrer"
+              className="proj-link" whileHover={{ scale: 1.1 }} title="Live">
+              ↗
+            </motion.a>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  )
+}
+
+// ── Projects Slider Component ─────────────────────────────────
+const ProjectsSlider = () => {
+  const [activeSlide, setActiveSlide] = useState(0)
+
+  const slides = []
+  for (let i = 0; i < projects.length; i += 2) {
+    slides.push(projects.slice(i, i + 2))
+  }
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide(prev => (prev + 1) % slides.length)
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [activeSlide, slides.length])
+
+  return (
+    <div className="projects-slider-container">
+      <div className="projects-slider-viewport">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeSlide}
+            className="projects-slider-slide"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
           >
-             <div className="project-content">
-               <h3>{project.title}</h3>
-               <p>{project.description}</p>
-               <div className="project-tech-tags">
-                 {project.tech.map((tech, index) => (
-                   <span key={index} className="tech-tag">{tech}</span>
-                 ))}
-               </div>
-               <div className="project-links">
-                 {project.github && (
-                   <motion.a
-                     href={project.github}
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     className="project-link github-link"
-                     whileHover={{ scale: 1.05 }}
-                     whileTap={{ scale: 0.95 }}
-                   >
-                     <img src={githubLogo} alt="GitHub" className="link-icon" />
-                     GitHub
-                   </motion.a>
-                 )}
-                 {project.live && (
-                   <motion.a
-                     href={project.live}
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     className="project-link live-link"
-                     whileHover={{ scale: 1.05, background: "rgba(255, 255, 255, 0.4)" }}
-                     whileTap={{ scale: 0.95 }}
-                   >
-                     🔗 Live Demo
-                   </motion.a>
-                 )}
-               </div>
-             </div>
+            {slides[activeSlide].map((project, pi) => {
+              const globalIdx = slides.slice(0, activeSlide).reduce((s, g) => s + g.length, 0) + pi
+              const isSolo = slides[activeSlide].length === 1
+              const posClass = isSolo
+                ? 'project-card-wrapper-solo'
+                : pi === 0 ? 'project-card-wrapper-top' : 'project-card-wrapper-bottom'
+
+              // Left card slides in from left; right card slides in from right
+              const initialX = pi === 0 ? -120 : 120
+
+              return (
+                <motion.div
+                  key={project.title}
+                  className={posClass}
+                  initial={{ opacity: 0, x: initialX }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -initialX }}
+                  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <ProjectCard project={project} index={globalIdx} />
+                </motion.div>
+              )
+            })}
           </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <div className="slider-dots">
+        {slides.map((_, idx) => (
+          <button
+            key={idx}
+            className={`slider-dot ${idx === activeSlide ? 'active' : ''}`}
+            onClick={() => setActiveSlide(idx)}
+            aria-label={`Go to slide ${idx + 1}`}
+          />
         ))}
-      </motion.div>
+      </div>
     </div>
   )
 }
+
+// ── Combined Experience & Projects Section ────────────────────
+const ExpAndProjectsSection = () => (
+  <section className="exp-projects-section" id="experience">
+    <motion.div
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: false, margin: '-80px' }}
+      variants={stagger}
+    >
+      <motion.div className="section-label" variants={fadeUp}>Experience &amp; Works</motion.div>
+
+      <div className="exp-projects-grid">
+        {/* Left Column: Experience */}
+        <div>
+          <motion.h2 className="col-heading" variants={fadeUp}>
+            Works &amp; <em>Learning</em>
+          </motion.h2>
+
+          <motion.div className="experience-list" variants={stagger}>
+            {experiences.map(exp => (
+              <motion.div key={exp.id} className="exp-card" variants={fadeUp}>
+                <div className="exp-card-inner">
+                  <span className="exp-number">{exp.id}</span>
+                  <div>
+                    <div className="exp-period">{exp.period}</div>
+                    <div className="exp-role">{exp.role}</div>
+                    <div className="exp-company">{exp.company}</div>
+                    <ul className="exp-items">
+                      {exp.items.map((item, i) => <li key={i}>{item}</li>)}
+                    </ul>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Right Column: Projects Slider */}
+        <div id="projects">
+          <motion.h2 className="col-heading" variants={fadeUp}>
+            Projects &amp; <em>Works</em>
+          </motion.h2>
+
+          <ProjectsSlider />
+        </div>
+      </div>
+    </motion.div>
+  </section>
+)
+
+// ── App ──────────────────────────────────────────────────────
+const App = () => (
+  <div className="app">
+    <Nav />
+    <main>
+      <Hero />
+      <ExpAndProjectsSection />
+    </main>
+  </div>
+)
 
 export default App
