@@ -690,10 +690,9 @@ body::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
   right: -8px;
   bottom: -8px;
 }
-
 .proj-link:hover { border-color: #111; color: #111; background: #f8f8f8; }
-.proj-link img { width: 11px; height: 11px; opacity: 0.4; }
-.proj-link:hover img { opacity: 0.85; }
+.proj-link img, .proj-link svg { width: 11px; height: 11px; opacity: 0.4; transition: opacity 0.22s; }
+.proj-link:hover img, .proj-link:hover svg { opacity: 0.85; }
 
 /* Dot Navigation Indicators */
 .slider-dots {

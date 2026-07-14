@@ -362,7 +362,10 @@ const ProjectCard = ({ project, index }) => {
           {project.live && (
             <motion.a href={project.live} target="_blank" rel="noopener noreferrer"
               className="proj-link" whileHover={{ scale: 1.1 }} title="Live">
-              ↗
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+              </svg>
             </motion.a>
           )}
         </div>
