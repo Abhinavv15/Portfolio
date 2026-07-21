@@ -89,7 +89,16 @@ const experiences = [
     period: 'Sep 2025 – Present',
     role: 'Software Development Engineer',
     company: 'GenCoft Technologies',
-    items: ['WorldSportsAcademy — Frontend', 'QuizWizard — UI redesign', 'OffShift — App testing', 'Bracketoro — Website testing', 'Brand Flyers — Design & Frontend'],
+    items: [
+      'WorldSportsAcademy – Frontend development',
+      'QuizWizard – UI redesign',
+      'OffShift – Application testing',
+      'Bracketoro – Website testing',
+      'Brand Flyers – Website testing and Frontend development',
+      'Flyers Creation – Designed using Canva and Figma',
+      'Gencoft Website – Redesigned the UI',
+      'OneKathaAtaTime – Frontend development and serverless functions',
+    ],
   },
   {
     id: '02',
@@ -130,12 +139,26 @@ const Nav = () => {
       >
         <a href="#" className="nav-logo" onClick={() => setMenuOpen(false)}>Abhinav V</a>
         
-        {/* Desktop links */}
-        <ul className="nav-links">
-          {['Experience', 'Projects'].map(link => (
-            <li key={link}><a href={`#${link.toLowerCase()}`}>{link}</a></li>
-          ))}
-        </ul>
+        {/* Desktop right section */}
+        <div className="nav-right">
+          <ul className="nav-links">
+            {['Experience', 'Projects'].map(link => (
+              <li key={link}><a href={`#${link.toLowerCase()}`}>{link}</a></li>
+            ))}
+          </ul>
+          <a
+            href="/Abhinav V CV.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-cv-btn"
+          >
+            <span>View CV</span>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+        </div>
 
         {/* Hamburger Menu Icon */}
         <button 
@@ -172,6 +195,17 @@ const Nav = () => {
                   </a>
                 </li>
               ))}
+              <li>
+                <a
+                  href="/Abhinav V CV.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMenuOpen(false)}
+                  className="mobile-cv-link"
+                >
+                  View CV ↗
+                </a>
+              </li>
             </ul>
           </motion.div>
         )}
@@ -250,6 +284,16 @@ const Hero = () => {
           >
             <span className="connect-label">Connect</span>
             <div className="connect-row">
+              <motion.a
+                href="/Abhinav V CV.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="connect-btn connect-cv-btn"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+              >
+                📄 View CV / Resume ↗
+              </motion.a>
               {socialLinks.map(({ href, img, label }) => (
                 <motion.a
                   key={label}
@@ -320,28 +364,13 @@ const Hero = () => {
   )
 }
 
-// ── Project card with 3-D tilt ────────────────────────────────
+// ── Project card with smooth hover ───────────────────────────
 const ProjectCard = ({ project, index }) => {
-  const cardRef = useRef(null)
-  const [rot, setRot] = useState({ x: 0, y: 0 })
-
-  const handleMove = e => {
-    if (!cardRef.current) return
-    const rect = cardRef.current.getBoundingClientRect()
-    const dx = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2)
-    const dy = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2)
-    setRot({ x: -dy * 5, y: dx * 5 })
-  }
-
   return (
     <motion.div
-      ref={cardRef}
       className="project-card"
-      onMouseMove={handleMove}
-      onMouseLeave={() => setRot({ x: 0, y: 0 })}
-      animate={{ rotateX: rot.x, rotateY: rot.y }}
-      transition={{ type: 'spring', stiffness: 200, damping: 22 }}
-      style={{ transformStyle: 'preserve-3d', perspective: 800 }}
+      whileHover={{ y: -6, scale: 1.015 }}
+      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
     >
       <div>
         <div className="project-num">{String(index + 1).padStart(2, '0')}</div>
@@ -377,6 +406,7 @@ const ProjectCard = ({ project, index }) => {
 // ── Projects Slider Component ─────────────────────────────────
 const ProjectsSlider = () => {
   const [activeSlide, setActiveSlide] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
 
   const slides = []
   for (let i = 0; i < projects.length; i += 2) {
@@ -384,23 +414,28 @@ const ProjectsSlider = () => {
   }
 
   useEffect(() => {
+    if (isPaused) return
     const timer = setInterval(() => {
       setActiveSlide(prev => (prev + 1) % slides.length)
-    }, 5000)
+    }, 6000)
     return () => clearInterval(timer)
-  }, [activeSlide, slides.length])
+  }, [activeSlide, slides.length, isPaused])
 
   return (
-    <div className="projects-slider-container">
+    <div 
+      className="projects-slider-container"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
       <div className="projects-slider-viewport">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeSlide}
             className="projects-slider-slide"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           >
             {slides[activeSlide].map((project, pi) => {
               const globalIdx = slides.slice(0, activeSlide).reduce((s, g) => s + g.length, 0) + pi
@@ -409,35 +444,41 @@ const ProjectsSlider = () => {
                 ? 'project-card-wrapper-solo'
                 : pi === 0 ? 'project-card-wrapper-top' : 'project-card-wrapper-bottom'
 
-              // Left card slides in from left; right card slides in from right
-              const initialX = pi === 0 ? -120 : 120
-
               return (
-                <motion.div
-                  key={project.title}
-                  className={posClass}
-                  initial={{ opacity: 0, x: initialX }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -initialX }}
-                  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                >
+                <div key={project.title} className={posClass}>
                   <ProjectCard project={project} index={globalIdx} />
-                </motion.div>
+                </div>
               )
             })}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      <div className="slider-dots">
-        {slides.map((_, idx) => (
-          <button
-            key={idx}
-            className={`slider-dot ${idx === activeSlide ? 'active' : ''}`}
-            onClick={() => setActiveSlide(idx)}
-            aria-label={`Go to slide ${idx + 1}`}
-          />
-        ))}
+      <div className="slider-controls">
+        <button 
+          className="slider-arrow" 
+          onClick={() => setActiveSlide(prev => (prev - 1 + slides.length) % slides.length)}
+          aria-label="Previous Slide"
+        >
+          ←
+        </button>
+        <div className="slider-dots">
+          {slides.map((_, idx) => (
+            <button
+              key={idx}
+              className={`slider-dot ${idx === activeSlide ? 'active' : ''}`}
+              onClick={() => setActiveSlide(idx)}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+        <button 
+          className="slider-arrow" 
+          onClick={() => setActiveSlide(prev => (prev + 1) % slides.length)}
+          aria-label="Next Slide"
+        >
+          →
+        </button>
       </div>
     </div>
   )
